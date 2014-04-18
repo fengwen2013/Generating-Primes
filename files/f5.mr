@@ -1,0 +1,17 @@
+n = 706698887
+  n-1 = 706698886
+  s = 1
+  r = 353349443
+  Itr 1 of 12, a = 2, y = 1
+  Itr 2 of 12, a = 3, y = 1
+  Itr 3 of 12, a = 5, y = 706698886 (which is n-1)
+  Itr 4 of 12, a = 7, y = 1
+  Itr 5 of 12, a = 11, y = 706698886 (which is n-1)
+  Itr 6 of 12, a = 13, y = 706698886 (which is n-1)
+  Itr 7 of 12, a = 17, y = 1
+  Itr 8 of 12, a = 19, y = 706698886 (which is n-1)
+  Itr 9 of 12, a = 23, y = 706698886 (which is n-1)
+  Itr 10 of 12, a = 29, y = 1
+  Itr 11 of 12, a = 31, y = 706698886 (which is n-1)
+  Itr 12 of 12, a = 37, y = 1
+Miller-Rabin declares n to be a prime number

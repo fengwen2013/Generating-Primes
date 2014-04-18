@@ -1,0 +1,6 @@
+n = 604235199
+  n-1 = 604235198
+  s = 1
+  r = 302117599
+  Itr 1 of 12, a = 2, y = 416660030
+Miller-Rabin found a strong witness 2

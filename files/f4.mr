@@ -1,0 +1,22 @@
+n = 941251117
+  n-1 = 941251116
+  s = 2
+  r = 235312779
+  Itr 1 of 12, a = 2, y = 467096146
+    j = 1 of 1, y = 941251116 (which is n-1)
+  Itr 2 of 12, a = 3, y = 1
+  Itr 3 of 12, a = 5, y = 474154971
+    j = 1 of 1, y = 941251116 (which is n-1)
+  Itr 4 of 12, a = 7, y = 1
+  Itr 5 of 12, a = 11, y = 1
+  Itr 6 of 12, a = 13, y = 941251116 (which is n-1)
+  Itr 7 of 12, a = 17, y = 1
+  Itr 8 of 12, a = 19, y = 1
+  Itr 9 of 12, a = 23, y = 467096146
+    j = 1 of 1, y = 941251116 (which is n-1)
+  Itr 10 of 12, a = 29, y = 474154971
+    j = 1 of 1, y = 941251116 (which is n-1)
+  Itr 11 of 12, a = 31, y = 941251116 (which is n-1)
+  Itr 12 of 12, a = 37, y = 467096146
+    j = 1 of 1, y = 941251116 (which is n-1)
+Miller-Rabin declares n to be a prime number
