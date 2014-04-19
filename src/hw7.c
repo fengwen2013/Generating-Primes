@@ -61,7 +61,47 @@ void primesCommand(char *argv[], int argc){
 }
 
 void trialdivCommand(char *argv[], int argc){
-
+	int i = 2;
+	FILE *primesfile = NULL;
+	unsigned char *bn_p = NULL;
+	int len = 0;
+	BIGNUM *bn_n = NULL;
+	
+	if(argc != 4){
+		fprintf(stderr, "Error: Wrong number of arguments for the command\n");
+		return;
+	}
+	else{
+		while(i < argc){
+			if(optionCheck(argv[i], "-n") == 1){
+				bn_n = BN_new();
+				if(bn_n == NULL){
+					fprintf(stdout, "Error: BIGNUM Error\n");
+					return;
+				}
+				BN_zero(bn_n);
+				len = strlen(argv[i]) - 3;
+				bn_p = (unsigned char *)malloc(len);
+				arrayCopy(bn_p, argv[i] + 3, len);
+				BN_dec2bn(&bn_n, argv[i] + 3);
+			}
+			else{
+				if(optionCheck(argv[i], "-p") == 1){
+					if((primesfile = openFile(argv[i] + 3)) == NULL){
+						return;
+					}
+					
+				}
+				else{
+					fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
+				}
+			}
+			i++;
+		}
+		trialdiv(bn_n, primesfile);
+		BN_free(bn_n);
+		free(bn_p);
+	}
 }
 
 void mrCommand(char *argv[], int argc){
