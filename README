@@ -1,1 +1,82 @@
-GENERAGTING PRIMES
+GENERATING PRIMES(hw7) Version 1.0 04/20/2014
+
+********************************
+GENERAL INFORMATION
+********************************
+STRUCTURE:
+--------------------------------
+hw7.h    	 : Include all header files and function declarations.
+util.h		 : Include declarations of functions in util.c.
+hw7.c    	 : Handle commands and invoke corresponding functions.
+primes.c     : Deal with primes command.
+trialdiv.c   : Deal with trialdiv command.
+millerrabin.c: Deal with millerrabin command.
+rndsearch.c  : Deal with rndsearch command.
+maurer.c 	 : Deal with maurer command.
+util.c  	 : Provides basic functionalities used by almost all programs.
+makefile	 : Complie the program.
+
+
+RUNING ENVIRONMNET: 
+--------------------------------
+Linux, Unix
+
+
+HOW TO COMPILE:
+--------------------------------
+Makefile is included, simply enters:
+    make hw7(or make)
+an executable named hw7 is created.
+
+
+********************************
+GUIDELINE
+********************************
+THE COMMANDLINE SYNTAX:
+--------------------------------
+	
+	hw7 primes -n=maxval
+    hw7 trialdiv -n=number -p=primesfile
+    hw7 millerrabin -n=number -t=maxitr -p=primesfile
+    hw7 rndsearch -k=numbits -t=maxitr -p=primesfile -r=rndfile
+    hw7 maurer -k=numbits -p=primesfile -r=rndfile
+
+
+THE MEANING of THE COMMANDLINES:
+--------------------------------
+primes	   :  	 Generate all prime numbers less than or equal to maxval. maxval must be between 2 and 2^24, inclusive. Use the sieve of Eratosthenes to generate the needed prime numbers. Since the sieve of Eratosthenes uses an array of maxval integers whose values can only be 0 or 1, in order to be memory efficient and use only maxval bits (i.e., ceil(maxval/8) bytes) for the array.
+
+trialdiv   :  	 Test the primality of number using trial division by trying sequentially all small prime numbers from 2 to floor(sqrt(number)), inclusive. Primesfile conforms to the primesfile format and must be used as the source of small prime numbers.
+ 
+millerrabin:  	 Test the primality of number using Miller-Rabin specified here with security parameter maxitr.
+ 
+rndsearch  :  	 Generate a numbits-bit probable prime using the Random-Search(numbits,maxitr) algorithm specified here with security parameter maxitr.
+ 
+maurer	   :  	 Generate a numbits-bit provable prime using the Maurer(numbits) algorithm specified here.
+
+
+THE OUTPUT FOR THE COMMANDLINES:
+--------------------------------
+primes	   :  	 The output of this command is a file in the primesfile format where the first word is maxval followed by all the prime numbers, in increasing order, between 2 and maxval, inclusive.
+
+trialdiv   :  	 If number passes the trial division test, output the following string (do not replace "n" with number):
+  			                n passes trial division test.
+
+				 If the maxval in primesfile is strictly less than floor(sqrt(number)) and all prime numbers in primesfile are not divisors of number, your program should output the following string (do not replace "n" with number):
+                            n passes trial division test (not enough primes).
+            
+                 If number fails the trial division test because it was divisible by prime number m, your program should output the following string (replace "m" with the numeric value of m):
+                            n is composite by trial division (mod m = 0).
+
+millerrabin:  	 As program progresses through various stages of the Miller-Rabin algorithm.
+
+rndsearch  :  	 As program progresses through various stages of the Random-Search algorithm.
+
+maurer     :  	 As program progresses through various stages of the maurer algorithm.
+
+
+********************************
+CONTACT IMFORMATION:
+********************************
+Email:	 fengwen@usc.edu
+Website: www-scf.usc.edu/~fengwen
