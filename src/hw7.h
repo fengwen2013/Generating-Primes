@@ -18,4 +18,6 @@ int trialdiv(BIGNUM *bn_n, FILE *primesfile, int num_idnt);
 int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile, int num_idnt);
 void rndsearch(int numbits, int maxitr, FILE *primesfile, FILE *rndfile);
 void maurer(int numbits, FILE *primesfile, FILE *rndfile);
+
 void printIndents(int num);
+void rndOddNum(BIGNUM *bn_n, int k, FILE *rndfile);

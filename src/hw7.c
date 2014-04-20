@@ -201,7 +201,43 @@ void rndsearchCommand(char *argv[], int argc){
 }
 
 void maurerCommand(char *argv[], int argc){
-
+	int i = 2;
+	FILE *primesfile = NULL;
+	FILE *rndfile = NULL;
+	int numbits = 0;
+	
+	if(argc != 5){
+		fprintf(stderr, "Error: Wrong number of arguments for the command\n");
+		return;
+	}
+	else{
+		while(i < argc){
+			if(optionCheck(argv[i], "-k") == 1){
+				sscanf(argv[i] + 3, "%d", &numbits);
+			}
+			else{
+				if(optionCheck(argv[i], "-p") == 1){
+					if((primesfile = openFile(argv[i] + 3)) == NULL){
+						return;
+					}
+					
+				}
+				else{
+					if(optionCheck(argv[i], "-r") == 1){
+						if((rndfile = openFile(argv[i] + 3)) == NULL){
+							return;
+						}
+					}
+					else{
+						fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
+									
+					}
+				}
+			}
+			i++;
+		}
+		maurer(numbits, primesfile, rndfile);
+	}
 }
 
 
