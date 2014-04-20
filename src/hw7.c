@@ -98,7 +98,7 @@ void trialdivCommand(char *argv[], int argc){
 			}
 			i++;
 		}
-		trialdiv(bn_n, primesfile);
+		trialdiv(bn_n, primesfile, 0);
 		BN_free(bn_n);
 		free(bn_p);
 	}
@@ -148,7 +148,7 @@ void mrCommand(char *argv[], int argc){
 			}
 			i++;
 		}
-		millerrabin(bn_n, maxitr, primesfile);
+		millerrabin(bn_n, maxitr, primesfile, 0);
 		BN_free(bn_n);
 		free(bn_p);
 	}

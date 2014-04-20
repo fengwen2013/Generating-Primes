@@ -3,6 +3,7 @@
 int compute_sr(BIGNUM *bn_n, BIGNUM *bn_r, BIGNUM *bn_n_1, BN_CTX *bn_ctx){
 	int j = 0;
 	BIGNUM *bn_w = NULL;
+	BIGNUM *bn_2 = NULL;
 	BIGNUM *div = NULL;
 	BIGNUM *rem = NULL;
 	
@@ -10,6 +11,7 @@ int compute_sr(BIGNUM *bn_n, BIGNUM *bn_r, BIGNUM *bn_n_1, BN_CTX *bn_ctx){
 	rem = BN_new();
 	div = BN_new();
 	bn_w = BN_new();
+	bn_2 = BN_new();
 	if(bn_w == NULL || div == NULL || rem == NULL){
 		fprintf(stdout, "Error: BIGNUM ERROR!\n");
 		return -1;
@@ -18,13 +20,14 @@ int compute_sr(BIGNUM *bn_n, BIGNUM *bn_r, BIGNUM *bn_n_1, BN_CTX *bn_ctx){
 	BN_set_word(bn_w, 1);
 	BN_sub(bn_n_1, bn_n, bn_w);
 	BN_set_word(bn_w, 2);
+	BN_set_word(bn_2, 2);
 	BN_copy(bn_r, bn_n_1);
 	
 	while(1){
 		BN_div(div, rem, bn_n_1, bn_w, bn_ctx);
 		if(BN_is_zero(rem) == 1){
 			BN_copy(bn_r, div);
-			BN_sqr(bn_w, bn_w, bn_ctx);
+			BN_mul(bn_w, bn_w, bn_2, bn_ctx);
 			j++;
 		}
 		else{
@@ -35,6 +38,7 @@ int compute_sr(BIGNUM *bn_n, BIGNUM *bn_r, BIGNUM *bn_n_1, BN_CTX *bn_ctx){
 	BN_free(div);
 	BN_free(rem);
 	BN_free(bn_w);
+	BN_free(bn_2);
 	
 	return j;	
 }
@@ -91,7 +95,7 @@ void ithPrime(int n, FILE *primesfile, BIGNUM *bn_a){
 	
 }
 
-int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile){
+int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile, int num_idnt){
 	int s = 0;
 	BIGNUM *bn_r = NULL;
 	BIGNUM *bn_n_1 = NULL;
@@ -110,16 +114,24 @@ int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile){
 	bn_ctx = BN_CTX_new();
 	bn_n_1 = BN_new();
 	BN_CTX_init(bn_ctx);
-	
+	fseek(primesfile, 0 ,SEEK_SET);
 	s = compute_sr(bn_n, bn_r, bn_n_1, bn_ctx);
 	if(s == -1){
 		return -1;
 	}
 	
-	fprintf(stdout, "n = %s\n", BN_bn2dec(bn_n));
-	fprintf(stdout, "  n-1 = %s\n  s = %d\n  r = %s\n", BN_bn2dec(bn_n_1), s, BN_bn2dec(bn_r));
+	if(num_idnt == 0){
+		fprintf(stdout, "n = %s\n", BN_bn2dec(bn_n));
+	}
+	printIndents(num_idnt);
+	fprintf(stdout, "  n-1 = %s\n", BN_bn2dec(bn_n_1));
+	printIndents(num_idnt);
+	fprintf(stdout, "  s = %d\n", s);
+	printIndents(num_idnt);
+	fprintf(stdout, "  r = %s\n", BN_bn2dec(bn_r));
 	
 	for(i = 1; i <= maxitr; i++){
+		printIndents(num_idnt);
 		fprintf(stdout, "  Itr %d of %d, ", i, maxitr);
 		
 		ithPrime(i, primesfile, bn_a);
@@ -134,6 +146,7 @@ int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile){
 			fprintf(stdout, "a = %s, y = %s\n", BN_bn2dec(bn_a), BN_bn2dec(bn_y));
 			for(j = 1; j <= s - 1; j++){
 				BN_mod_mul(bn_y, bn_y, bn_y, bn_n, bn_ctx);
+				printIndents(num_idnt);
 				fprintf(stdout, "    j = %d of %d, y = %s", j, s - 1, BN_bn2dec(bn_y));
 				if(BN_cmp(bn_y, bn_n_1) == 0){
 					fprintf(stdout, " (which is n-1)\n");
@@ -147,6 +160,7 @@ int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile){
 			}
 			
 			if(BN_cmp(bn_y, bn_n_1) != 0){
+				printIndents(num_idnt);
 				fprintf(stdout, "Miller-Rabin found a strong witness %s\n", BN_bn2dec(bn_a));
 				return 0;
 			}
@@ -162,6 +176,7 @@ int millerrabin(BIGNUM *bn_n, int maxitr, FILE *primesfile){
 		
 		
 	}
+	printIndents(num_idnt);
 	fprintf(stdout, "Miller-Rabin declares n to be a prime number\n");	
 	return 1;
 	
