@@ -44,6 +44,7 @@ void primesCommand(char *argv[], int argc){
 	}
 	else{
 		if(optionCheck(argv[2], "-n") == -1){
+				fprintf(stdout, "Error: Wrong Format of \"-n\" option\n");
 				return;
 		}
 		else{
@@ -52,7 +53,7 @@ void primesCommand(char *argv[], int argc){
 			}
 			
 			if(maxval < MIN_SMALLPRIME || maxval > MAX_SMALLPRIME){
-				fprintf(stdout, "Error: maxval must be between 2 and 2^24, inclusive\n");
+				fprintf(stderr, "Error: maxval must be between 2 and 2^24, inclusive\n");
 				return;
 			}
 			primes(maxval);
@@ -63,7 +64,6 @@ void primesCommand(char *argv[], int argc){
 void trialdivCommand(char *argv[], int argc){
 	int i = 2;
 	FILE *primesfile = NULL;
-	unsigned char *bn_p = NULL;
 	int len = 0;
 	BIGNUM *bn_n = NULL;
 	
@@ -76,13 +76,14 @@ void trialdivCommand(char *argv[], int argc){
 			if(optionCheck(argv[i], "-n") == 1){
 				bn_n = BN_new();
 				if(bn_n == NULL){
-					fprintf(stdout, "Error: BIGNUM Error\n");
+					fprintf(stderr, "Error: BIGNUM Error\n");
 					return;
 				}
 				BN_zero(bn_n);
 				len = strlen(argv[i]) - 3;
-				bn_p = (unsigned char *)malloc(len);
-				arrayCopy(bn_p, argv[i] + 3, len);
+				if(is_number(argv[i] + 3, len) == -1){
+					return;
+				}
 				BN_dec2bn(&bn_n, argv[i] + 3);
 			}
 			else{
@@ -94,20 +95,19 @@ void trialdivCommand(char *argv[], int argc){
 				}
 				else{
 					fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
+					return;
 				}
 			}
 			i++;
 		}
 		trialdiv(bn_n, primesfile, 0);
 		BN_free(bn_n);
-		free(bn_p);
 	}
 }
 
 void mrCommand(char *argv[], int argc){
 	int i = 2;
 	FILE *primesfile = NULL;
-	unsigned char *bn_p = NULL;
 	int len = 0;
 	int maxitr = 0;
 	BIGNUM *bn_n = NULL;
@@ -121,13 +121,14 @@ void mrCommand(char *argv[], int argc){
 			if(optionCheck(argv[i], "-n") == 1){
 				bn_n = BN_new();
 				if(bn_n == NULL){
-					fprintf(stdout, "Error: BIGNUM Error\n");
+					fprintf(stderr, "Error: BIGNUM Error\n");
 					return;
 				}
 				BN_zero(bn_n);
 				len = strlen(argv[i]) - 3;
-				bn_p = (unsigned char *)malloc(len);
-				arrayCopy(bn_p, argv[i] + 3, len);
+				if(is_number(argv[i] + 3, len) == -1){
+					return;
+				}
 				BN_dec2bn(&bn_n, argv[i] + 3);
 			}
 			else{
@@ -139,10 +140,15 @@ void mrCommand(char *argv[], int argc){
 				}
 				else{
 					if(optionCheck(argv[i], "-t") == 1){
+						len = strlen(argv[i]) - 3;
+						if(is_number(argv[i] + 3, len) == -1){
+							return;
+						}
 						sscanf(argv[i] + 3, "%d", &maxitr);
 					}
 					else{
-					fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
+						fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-t\" or \"-p\"\n");
+						return;
 					}
 				}
 			}
@@ -150,7 +156,6 @@ void mrCommand(char *argv[], int argc){
 		}
 		millerrabin(bn_n, maxitr, primesfile, 0);
 		BN_free(bn_n);
-		free(bn_p);
 	}
 }
 
@@ -160,6 +165,7 @@ void rndsearchCommand(char *argv[], int argc){
 	FILE *rndfile = NULL;
 	int maxitr = 0;
 	int numbits = 0;
+	int len = 0;
 	
 	if(argc != 6){
 		fprintf(stderr, "Error: Wrong number of arguments for the command\n");
@@ -168,6 +174,10 @@ void rndsearchCommand(char *argv[], int argc){
 	else{
 		while(i < argc){
 			if(optionCheck(argv[i], "-k") == 1){
+				len = strlen(argv[i]) - 3;
+				if(is_number(argv[i] + 3, len) == -1){
+					return;
+				}
 				sscanf(argv[i] + 3, "%d", &numbits);
 			}
 			else{
@@ -179,6 +189,10 @@ void rndsearchCommand(char *argv[], int argc){
 				}
 				else{
 					if(optionCheck(argv[i], "-t") == 1){
+						len = strlen(argv[i]) - 3;
+						if(is_number(argv[i] + 3, len) == -1){
+							return;
+						}
 						sscanf(argv[i] + 3, "%d", &maxitr);
 					}
 					else{
@@ -188,7 +202,8 @@ void rndsearchCommand(char *argv[], int argc){
 							}
 						}
 						else{
-							fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
+							fprintf(stderr, "Error: Wrong option, should be \"-r\" or \"-t\" or \"-k\" or \"-p\"\n");
+							return;
 						}
 					}
 				}
@@ -205,6 +220,8 @@ void maurerCommand(char *argv[], int argc){
 	FILE *primesfile = NULL;
 	FILE *rndfile = NULL;
 	int numbits = 0;
+	BIGNUM *bn_n = NULL;
+	int len = 0;
 	
 	if(argc != 5){
 		fprintf(stderr, "Error: Wrong number of arguments for the command\n");
@@ -213,6 +230,10 @@ void maurerCommand(char *argv[], int argc){
 	else{
 		while(i < argc){
 			if(optionCheck(argv[i], "-k") == 1){
+				len = strlen(argv[i]) - 3;
+				if(is_number(argv[i] + 3, len) == -1){
+					return;
+				}
 				sscanf(argv[i] + 3, "%d", &numbits);
 			}
 			else{
@@ -229,14 +250,16 @@ void maurerCommand(char *argv[], int argc){
 						}
 					}
 					else{
-						fprintf(stderr, "Error: Wrong option, should be \"-n\" or \"-p\"\n");
-									
+						fprintf(stderr, "Error: Wrong option, should be \"-r\" or \"-k\" or \"-p\"\n");
+						return;		
 					}
 				}
 			}
 			i++;
 		}
-		maurer(numbits, primesfile, rndfile);
+		bn_n = BN_new();
+		maurer(bn_n, numbits, primesfile, rndfile, 0);
+		BN_free(bn_n);
 	}
 }
 

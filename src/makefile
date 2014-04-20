@@ -4,7 +4,7 @@ CFLAGS = -I$(IDIR) -g -Wall
 _DEPS = hw7.h
 DEPS = $(pathsubst %, $(IDIR)/%, $(_DEPS))
 
-OBJ = hw7.o util.o maurer.o millerrabin.o rndsearch.o primes.o trialdiv.c
+OBJ = hw7.o util.o maurer.o millerrabin.o rndsearch.o primes.o trialdiv.o
 
 hw7: $(OBJ)
 	$(CC) $^ -o $@ -L/usr/lib/x86_64-linux-gnu/ -lcrypto
